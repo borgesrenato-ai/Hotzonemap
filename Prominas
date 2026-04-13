@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Hotmap Brasil</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/brazil.js"></script>
+  <style>
+    body { margin: 0; background: #0b1e2d; }
+    #main { width: 100vw; height: 100vh; }
+  </style>
+</head>
+
+<body>
+<div id="main"></div>
+
+<script>
+var chart = echarts.init(document.getElementById('main'));
+
+var option = {
+  title: {
+    text: 'Hotzone de Vendas - Brasil',
+    left: 'center',
+    textStyle: { color: '#fff' }
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  visualMap: {
+    min: 0,
+    max: 12,
+    left: 'left',
+    bottom: 20,
+    text: ['Alto','Baixo'],
+    calculable: true,
+    inRange: {
+      color: ['#2c7bb6', '#ffffbf', '#d7191c']
+    }
+  },
+  series: [
+    {
+      name: 'Vendas',
+      type: 'map',
+      map: 'brazil',
+      roam: true,
+      label: { show: false },
+      data: [
+        { name: 'São Paulo', value: 11 },
+        { name: 'Paraná', value: 7 },
+        { name: 'Minas Gerais', value: 5 },
+        { name: 'Bahia', value: 3 },
+        { name: 'Pernambuco', value: 3 },
+        { name: 'Mato Grosso', value: 2 },
+        { name: 'Rio de Janeiro', value: 2 },
+        { name: 'Ceará', value: 1 },
+        { name: 'Goiás', value: 1 },
+        { name: 'Rio Grande do Sul', value: 1 },
+        { name: 'Sergipe', value: 1 }
+      ]
+    }
+  ]
+};
+
+chart.setOption(option);
+</script>
+</body>
+</html>
