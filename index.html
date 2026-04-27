@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mapa Comercial Prominas | Hotzones</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- CSS do projeto -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <h1>Mapa Comercial</h1>
+      <p class="subtitle">Hotzones de prestadores no Brasil</p>
+
+      <div class="filter-group">
+        <label for="ufFilter">Estado</label>
+        <select id="ufFilter">
+          <option value="">Todos os estados</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="linhaFilter">Linha de Produto</label>
+        <select id="linhaFilter">
+          <option value="">Todas as linhas</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="searchInput">Buscar empresa, cidade ou CNPJ</label>
+        <input id="searchInput" type="text" placeholder="Digite para buscar..." />
+      </div>
+
+      <button id="resetButton">Resetar filtros</button>
+
+      <div id="summary">
+        <strong>Empresas no mapa:</strong>
+        <span id="totalEmpresas">0</span>
+      </div>
+    </aside>
+
+    <main id="map"></main>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+
+  <!-- JS do projeto -->
+  <script src="app.js"></script>
+</body>
+</html>
