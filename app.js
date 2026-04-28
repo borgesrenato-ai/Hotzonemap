@@ -129,9 +129,91 @@ function aplicarFiltros() {
 
   totalEmpresas.textContent = filtrados.length.toLocaleString("pt-BR");
 
+  atualizarRankingCidades(filtrados);
   desenharHeatmap(filtrados);
   desenharPontos(filtrados);
   ajustarMapa(filtrados);
+}
+
+function atualizarRankingCidades(features) {
+  if (!rankingCidades) {
+    return;
+  }
+
+  rankingCidades.innerHTML = "";
+
+  if (!features || features.length === 0) {
+    const li = document.createElement("li");
+    li.textContent = "Nenhuma cidade encontrada";
+    rankingCidades.appendChild(li);
+    return;
+  }
+
+  const cidades = new Map();
+
+  features.forEach(item => {
+    const p = item.properties || {};
+    const coords = item.geometry.coordinates || [];
+
+    const lng = coords[0];
+    const lat = coords[1];
+
+    const nomeCidade =
+      p.cidadeUf ||
+      [p.cidade, p.uf].filter(Boolean).join(" - ") ||
+      "Cidade não informada";
+
+    if (!cidades.has(nomeCidade)) {
+      cidades.set(nomeCidade, {
+        nome: nomeCidade,
+        total: 0,
+        latSoma: 0,
+        lngSoma: 0,
+        pontosValidos: 0
+      });
+    }
+
+    const cidade = cidades.get(nomeCidade);
+    cidade.total += 1;
+
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      cidade.latSoma += lat;
+      cidade.lngSoma += lng;
+      cidade.pontosValidos += 1;
+    }
+  });
+
+  const ranking = [...cidades.values()]
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 10);
+
+  ranking.forEach(cidade => {
+    const li = document.createElement("li");
+    li.className = "ranking-item";
+
+    const nome = document.createElement("span");
+    nome.className = "ranking-city";
+    nome.textContent = cidade.nome;
+
+    const total = document.createElement("span");
+    total.className = "ranking-total";
+    total.textContent = cidade.total.toLocaleString("pt-BR");
+
+    li.appendChild(nome);
+    li.appendChild(total);
+
+    if (cidade.pontosValidos > 0) {
+      const latMedia = cidade.latSoma / cidade.pontosValidos;
+      const lngMedia = cidade.lngSoma / cidade.pontosValidos;
+
+      li.title = "Clique para aproximar no mapa";
+      li.addEventListener("click", () => {
+        map.setView([latMedia, lngMedia], 10);
+      });
+    }
+
+    rankingCidades.appendChild(li);
+  });
 }
 
 function desenharHeatmap(features) {
@@ -192,31 +274,31 @@ function desenharPontos(features) {
     const rotaUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
 
     marker.bindPopup(`
-  <div class="popup-card">
-    <div class="popup-title">${p.razao || "Sem razão social"}</div>
+      <div class="popup-card">
+        <div class="popup-title">${p.razao || "Sem razão social"}</div>
 
-    <div class="popup-badge" style="background:${corLinha};">
-      ${p.linha || "Linha não informada"}
-    </div>
+        <div class="popup-badge" style="background:${corLinha};">
+          ${p.linha || "Linha não informada"}
+        </div>
 
-    <div class="popup-section">
-      <div class="popup-line"><b>Cidade/UF:</b> ${p.cidadeUf || "-"}</div>
-      <div class="popup-line"><b>Mesorregião:</b> ${p.mesorregiao || "-"}</div>
-      <div class="popup-line"><b>Faturamento:</b> ${p.faturamento || "-"}</div>
-    </div>
+        <div class="popup-section">
+          <div class="popup-line"><b>Cidade/UF:</b> ${p.cidadeUf || "-"}</div>
+          <div class="popup-line"><b>Mesorregião:</b> ${p.mesorregiao || "-"}</div>
+          <div class="popup-line"><b>Faturamento:</b> ${p.faturamento || "-"}</div>
+        </div>
 
-    <div class="popup-section">
-      <div class="popup-line"><b>CNPJ:</b> ${p.cnpj || "-"}</div>
-      <div class="popup-line"><b>CEP:</b> ${p.cep || "-"}</div>
-      <div class="popup-line"><b>CNAE:</b> ${p.cnae || "-"}</div>
-    </div>
+        <div class="popup-section">
+          <div class="popup-line"><b>CNPJ:</b> ${p.cnpj || "-"}</div>
+          <div class="popup-line"><b>CEP:</b> ${p.cep || "-"}</div>
+          <div class="popup-line"><b>CNAE:</b> ${p.cnae || "-"}</div>
+        </div>
 
-    <div class="popup-actions">
-      <a class="popup-route" href="${rotaUrl}" target="_blank">Abrir rota</a>
-      <a class="popup-search" href="https://www.google.com/search?q=${encodeURIComponent((p.razao || "") + " " + (p.cnpj || ""))}" target="_blank">Pesquisar</a>
-    </div>
-  </div>
-`);
+        <div class="popup-actions">
+          <a class="popup-route" href="${rotaUrl}" target="_blank">Abrir rota</a>
+          <a class="popup-search" href="https://www.google.com/search?q=${encodeURIComponent((p.razao || "") + " " + (p.cnpj || ""))}" target="_blank">Pesquisar</a>
+        </div>
+      </div>
+    `);
 
     marker.addTo(camadaPontos);
   });
