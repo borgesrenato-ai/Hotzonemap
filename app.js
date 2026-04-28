@@ -26,6 +26,32 @@ fetch("data/mapa_base.geojson")
     totalEmpresas.textContent = "0";
   });
 
+function normalizarTexto(texto) {
+  return String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function getCorLinha(linha) {
+  const linhaNormalizada = normalizarTexto(linha);
+
+  if (linhaNormalizada.includes("limpeza")) {
+    return "#2563eb"; // Azul - Equipamentos de limpeza
+  }
+
+  if (linhaNormalizada.includes("perfuratriz") || linhaNormalizada.includes("perfuratrizes")) {
+    return "#f97316"; // Laranja - Perfuratrizes
+  }
+
+  if (linhaNormalizada.includes("tratamento")) {
+    return "#16a34a"; // Verde - Tratamento primário
+  }
+
+  return "#6b7280"; // Cinza - fallback
+}
+
 function preencherFiltros(features) {
   const ufs = [...new Set(features.map(item => item.properties.uf).filter(Boolean))].sort();
   const linhas = [...new Set(features.map(item => item.properties.linha).filter(Boolean))].sort();
@@ -93,11 +119,15 @@ function desenharPontos(features) {
     const lng = coords[0];
     const lat = coords[1];
 
+    const corLinha = getCorLinha(p.linha);
+
     const marker = L.circleMarker([lat, lng], {
-      radius: 6,
-      weight: 1,
-      opacity: 0.9,
-      fillOpacity: 0.65
+      radius: 7,
+      color: corLinha,
+      fillColor: corLinha,
+      weight: 1.5,
+      opacity: 0.95,
+      fillOpacity: 0.72
     });
 
     const rotaUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
