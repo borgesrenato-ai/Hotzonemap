@@ -216,3 +216,40 @@ input:focus {
 .legend-green {
   background: #16a34a;
 }
+.popup-card {
+  min-width: 260px;
+  max-width: 320px;
+}
+
+.popup-badge {
+  display: inline-block;
+  margin: 4px 0 10px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.popup-section {
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.popup-search {
+  display: inline-block;
+  padding: 7px 9px;
+  background: #111827;
+  color: #ffffff !important;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+}
