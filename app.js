@@ -10,6 +10,7 @@ let camadaPontos = L.layerGroup().addTo(map);
 
 const ufFilter = document.getElementById("ufFilter");
 const linhaFilter = document.getElementById("linhaFilter");
+const faturamentoFilter = document.getElementById("faturamentoFilter");
 const searchInput = document.getElementById("searchInput");
 const resetButton = document.getElementById("resetButton");
 const totalEmpresas = document.getElementById("totalEmpresas");
@@ -56,6 +57,12 @@ function preencherFiltros(features) {
   const ufs = [...new Set(features.map(item => item.properties.uf).filter(Boolean))].sort();
   const linhas = [...new Set(features.map(item => item.properties.linha).filter(Boolean))].sort();
 
+  const faturamentos = [
+    ...new Set(features.map(item => item.properties.faturamento).filter(Boolean))
+  ].sort((a, b) => {
+    return extrairPrimeiroValor(a) - extrairPrimeiroValor(b);
+  });
+
   ufs.forEach(uf => {
     const option = document.createElement("option");
     option.value = uf;
@@ -69,20 +76,37 @@ function preencherFiltros(features) {
     option.textContent = linha;
     linhaFilter.appendChild(option);
   });
+
+  faturamentos.forEach(faturamento => {
+    const option = document.createElement("option");
+    option.value = faturamento;
+    option.textContent = faturamento;
+    faturamentoFilter.appendChild(option);
+  });
+}
+
+function extrairPrimeiroValor(texto) {
+  const numero = String(texto || "")
+    .replace(/[^\d,]/g, "")
+    .split(",")[0];
+
+  return Number(numero) || 0;
 }
 
 function aplicarFiltros() {
   const ufSelecionado = ufFilter.value;
   const linhaSelecionada = linhaFilter.value;
-  const busca = searchInput.value.trim().toLowerCase();
+  const faturamentoSelecionado = faturamentoFilter.value;
+  const busca = normalizarTexto(searchInput.value);
 
   const filtrados = todosDados.filter(item => {
     const p = item.properties;
 
     const passaUf = !ufSelecionado || p.uf === ufSelecionado;
     const passaLinha = !linhaSelecionada || p.linha === linhaSelecionada;
+    const passaFaturamento = !faturamentoSelecionado || p.faturamento === faturamentoSelecionado;
 
-    const textoBusca = [
+    const textoBusca = normalizarTexto([
       p.razao,
       p.cnpj,
       p.cidade,
@@ -90,14 +114,13 @@ function aplicarFiltros() {
       p.cidadeUf,
       p.cnae,
       p.mesorregiao,
-      p.linha
-    ]
-      .join(" ")
-      .toLowerCase();
+      p.linha,
+      p.faturamento
+    ].join(" "));
 
     const passaBusca = !busca || textoBusca.includes(busca);
 
-    return passaUf && passaLinha && passaBusca;
+    return passaUf && passaLinha && passaFaturamento && passaBusca;
   });
 
   totalEmpresas.textContent = filtrados.length.toLocaleString("pt-BR");
@@ -166,11 +189,13 @@ function desenharPontos(features) {
 
 ufFilter.addEventListener("change", aplicarFiltros);
 linhaFilter.addEventListener("change", aplicarFiltros);
+faturamentoFilter.addEventListener("change", aplicarFiltros);
 searchInput.addEventListener("input", aplicarFiltros);
 
 resetButton.addEventListener("click", () => {
   ufFilter.value = "";
   linhaFilter.value = "";
+  faturamentoFilter.value = "";
   searchInput.value = "";
   map.setView([-14.235, -51.9253], 4);
   aplicarFiltros();
