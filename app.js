@@ -7,6 +7,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 let todosDados = [];
 let camadaPontos = L.layerGroup().addTo(map);
+let camadaHeatmap = null;
 
 const ufFilter = document.getElementById("ufFilter");
 const linhaFilter = document.getElementById("linhaFilter");
@@ -14,6 +15,8 @@ const faturamentoFilter = document.getElementById("faturamentoFilter");
 const searchInput = document.getElementById("searchInput");
 const resetButton = document.getElementById("resetButton");
 const totalEmpresas = document.getElementById("totalEmpresas");
+const heatmapToggle = document.getElementById("heatmapToggle");
+const pointsToggle = document.getElementById("pointsToggle");
 
 fetch("data/mapa_base.geojson")
   .then(response => response.json())
@@ -125,11 +128,43 @@ function aplicarFiltros() {
 
   totalEmpresas.textContent = filtrados.length.toLocaleString("pt-BR");
 
+  desenharHeatmap(filtrados);
   desenharPontos(filtrados);
+  ajustarMapa(filtrados);
+}
+
+function desenharHeatmap(features) {
+  if (camadaHeatmap) {
+    map.removeLayer(camadaHeatmap);
+    camadaHeatmap = null;
+  }
+
+  if (!heatmapToggle.checked || features.length === 0) {
+    return;
+  }
+
+  const pontosHeat = features.map(item => {
+    const coords = item.geometry.coordinates;
+    const lng = coords[0];
+    const lat = coords[1];
+
+    return [lat, lng, 0.65];
+  });
+
+  camadaHeatmap = L.heatLayer(pontosHeat, {
+    radius: 28,
+    blur: 22,
+    maxZoom: 9,
+    minOpacity: 0.35
+  }).addTo(map);
 }
 
 function desenharPontos(features) {
   camadaPontos.clearLayers();
+
+  if (!pointsToggle.checked) {
+    return;
+  }
 
   if (features.length > 2000) {
     return;
@@ -171,32 +206,44 @@ function desenharPontos(features) {
 
     marker.addTo(camadaPontos);
   });
+}
 
-  if (features.length > 0 && features.length <= 2000) {
-    const bounds = L.latLngBounds(
-      features.map(item => {
-        const coords = item.geometry.coordinates;
-        return [coords[1], coords[0]];
-      })
-    );
-
-    map.fitBounds(bounds, {
-      padding: [30, 30],
-      maxZoom: 9
-    });
+function ajustarMapa(features) {
+  if (features.length === 0) {
+    return;
   }
+
+  if (features.length > 3000) {
+    return;
+  }
+
+  const bounds = L.latLngBounds(
+    features.map(item => {
+      const coords = item.geometry.coordinates;
+      return [coords[1], coords[0]];
+    })
+  );
+
+  map.fitBounds(bounds, {
+    padding: [30, 30],
+    maxZoom: 9
+  });
 }
 
 ufFilter.addEventListener("change", aplicarFiltros);
 linhaFilter.addEventListener("change", aplicarFiltros);
 faturamentoFilter.addEventListener("change", aplicarFiltros);
 searchInput.addEventListener("input", aplicarFiltros);
+heatmapToggle.addEventListener("change", aplicarFiltros);
+pointsToggle.addEventListener("change", aplicarFiltros);
 
 resetButton.addEventListener("click", () => {
   ufFilter.value = "";
   linhaFilter.value = "";
   faturamentoFilter.value = "";
   searchInput.value = "";
+  heatmapToggle.checked = true;
+  pointsToggle.checked = true;
   map.setView([-14.235, -51.9253], 4);
   aplicarFiltros();
 });
