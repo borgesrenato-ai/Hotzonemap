@@ -47,7 +47,17 @@
       </div>
 
       <button id="resetButton">Resetar filtros</button>
+<div class="map-tools">
+  <label class="checkbox-line">
+    <input type="checkbox" id="heatmapToggle" checked />
+    Mostrar hotzone
+  </label>
 
+  <label class="checkbox-line">
+    <input type="checkbox" id="pointsToggle" checked />
+    Mostrar pontos filtrados
+  </label>
+</div>
       <div id="summary">
         <strong>Empresas no mapa:</strong>
         <span id="totalEmpresas">0</span>
@@ -57,10 +67,13 @@
     <main id="map"></main>
   </div>
 
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
+ <!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<!-- Leaflet Heatmap -->
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
   <!-- JS do projeto -->
   <script src="app.js"></script>
