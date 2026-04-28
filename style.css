@@ -170,3 +170,49 @@ input:focus {
   width: auto;
   cursor: pointer;
 }
+.legend-box {
+  margin-top: 18px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.legend-box strong {
+  display: block;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+  color: #374151;
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: inline-block;
+  border: 1px solid rgba(17, 24, 39, 0.25);
+}
+
+.legend-blue {
+  background: #2563eb;
+}
+
+.legend-orange {
+  background: #f97316;
+}
+
+.legend-green {
+  background: #16a34a;
+}
