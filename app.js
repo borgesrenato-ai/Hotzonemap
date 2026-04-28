@@ -15,6 +15,7 @@ const faturamentoFilter = document.getElementById("faturamentoFilter");
 const searchInput = document.getElementById("searchInput");
 const resetButton = document.getElementById("resetButton");
 const totalEmpresas = document.getElementById("totalEmpresas");
+const rankingCidades = document.getElementById("rankingCidades");
 const heatmapToggle = document.getElementById("heatmapToggle");
 const pointsToggle = document.getElementById("pointsToggle");
 
