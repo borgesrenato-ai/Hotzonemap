@@ -191,18 +191,31 @@ function desenharPontos(features) {
     const rotaUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
 
     marker.bindPopup(`
-      <div>
-        <div class="popup-title">${p.razao || "Sem razão social"}</div>
-        <div class="popup-line"><b>CNPJ:</b> ${p.cnpj || "-"}</div>
-        <div class="popup-line"><b>Cidade/UF:</b> ${p.cidadeUf || "-"}</div>
-        <div class="popup-line"><b>CEP:</b> ${p.cep || "-"}</div>
-        <div class="popup-line"><b>CNAE:</b> ${p.cnae || "-"}</div>
-        <div class="popup-line"><b>Faturamento:</b> ${p.faturamento || "-"}</div>
-        <div class="popup-line"><b>Mesorregião:</b> ${p.mesorregiao || "-"}</div>
-        <div class="popup-line"><b>Linha:</b> ${p.linha || "-"}</div>
-        <a class="popup-route" href="${rotaUrl}" target="_blank">Abrir rota</a>
-      </div>
-    `);
+  <div class="popup-card">
+    <div class="popup-title">${p.razao || "Sem razão social"}</div>
+
+    <div class="popup-badge" style="background:${corLinha};">
+      ${p.linha || "Linha não informada"}
+    </div>
+
+    <div class="popup-section">
+      <div class="popup-line"><b>Cidade/UF:</b> ${p.cidadeUf || "-"}</div>
+      <div class="popup-line"><b>Mesorregião:</b> ${p.mesorregiao || "-"}</div>
+      <div class="popup-line"><b>Faturamento:</b> ${p.faturamento || "-"}</div>
+    </div>
+
+    <div class="popup-section">
+      <div class="popup-line"><b>CNPJ:</b> ${p.cnpj || "-"}</div>
+      <div class="popup-line"><b>CEP:</b> ${p.cep || "-"}</div>
+      <div class="popup-line"><b>CNAE:</b> ${p.cnae || "-"}</div>
+    </div>
+
+    <div class="popup-actions">
+      <a class="popup-route" href="${rotaUrl}" target="_blank">Abrir rota</a>
+      <a class="popup-search" href="https://www.google.com/search?q=${encodeURIComponent((p.razao || "") + " " + (p.cnpj || ""))}" target="_blank">Pesquisar</a>
+    </div>
+  </div>
+`);
 
     marker.addTo(camadaPontos);
   });
