@@ -35,29 +35,52 @@
           <option value="">Todas as linhas</option>
         </select>
       </div>
-<div class="filter-group">
-  <label for="faturamentoFilter">Faturamento Estimado</label>
-  <select id="faturamentoFilter">
-    <option value="">Todas as faixas</option>
-  </select>
-</div>
+
+      <div class="filter-group">
+        <label for="faturamentoFilter">Faturamento Estimado</label>
+        <select id="faturamentoFilter">
+          <option value="">Todas as faixas</option>
+        </select>
+      </div>
+
       <div class="filter-group">
         <label for="searchInput">Buscar empresa, cidade ou CNPJ</label>
         <input id="searchInput" type="text" placeholder="Digite para buscar..." />
       </div>
 
       <button id="resetButton">Resetar filtros</button>
-<div class="map-tools">
-  <label class="checkbox-line">
-    <input type="checkbox" id="heatmapToggle" checked />
-    Mostrar hotzone
-  </label>
 
-  <label class="checkbox-line">
-    <input type="checkbox" id="pointsToggle" checked />
-    Mostrar pontos filtrados
-  </label>
-</div>
+      <div class="map-tools">
+        <label class="checkbox-line">
+          <input type="checkbox" id="heatmapToggle" checked />
+          Mostrar hotzone
+        </label>
+
+        <label class="checkbox-line">
+          <input type="checkbox" id="pointsToggle" checked />
+          Mostrar pontos filtrados
+        </label>
+      </div>
+
+      <div class="legend-box">
+        <strong>Legenda das linhas</strong>
+
+        <div class="legend-item">
+          <span class="legend-dot legend-blue"></span>
+          Equipamentos de limpeza
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot legend-orange"></span>
+          Perfuratrizes
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot legend-green"></span>
+          Tratamento primário
+        </div>
+      </div>
+
       <div id="summary">
         <strong>Empresas no mapa:</strong>
         <span id="totalEmpresas">0</span>
@@ -67,15 +90,13 @@
     <main id="map"></main>
   </div>
 
- <!-- Leaflet JS -->
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- Leaflet Heatmap -->
-<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <!-- Leaflet Heatmap -->
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
   <!-- JS do projeto -->
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
