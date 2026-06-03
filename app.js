@@ -75,11 +75,34 @@ function preencherFiltros(features) {
   });
 
   linhas.forEach(linha => {
-    const option = document.createElement("option");
-    option.value = linha;
+  const option = document.createElement("option");
+  option.value = linha;
+
+  const linhaNormalizada = normalizarTexto(linha);
+
+  if (
+    linhaNormalizada.includes("perfuratriz") ||
+    linhaNormalizada.includes("perfuratrizes")
+  ) {
+    option.textContent = "Mineração e Processamento Mineral";
+  } 
+  else if (
+    linhaNormalizada.includes("tratamento") ||
+    linhaNormalizada.includes("saneamento")
+  ) {
+    option.textContent = "Cimento e Coprocessamento";
+  } 
+  else if (
+    linhaNormalizada.includes("limpeza")
+  ) {
+    option.textContent = "Papel, Celulose e Biomassa";
+  } 
+  else {
     option.textContent = linha;
-    linhaFilter.appendChild(option);
-  });
+  }
+
+  linhaFilter.appendChild(option);
+});
 
   faturamentos.forEach(faturamento => {
     const option = document.createElement("option");
